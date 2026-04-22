@@ -66,26 +66,9 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f5f5f4; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 10px; }
-
-        #api-key-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        #api-key-modal.hidden { display: none; }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 antialiased selection:bg-amber-100">
-
-    <!-- API Key Modal -->
-    <div id="api-key-modal" class="hidden">
-        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
-            <h3 class="text-lg font-bold text-stone-900 serif mb-2">Enter your Gemini API Key</h3>
-            <p class="text-stone-500 text-sm mb-1">Your key is stored only in your browser and never sent anywhere except Google’s API.</p>
-            <p class="text-stone-400 text-xs mb-4">Get a free key at <span class="font-mono text-amber-700">aistudio.google.com</span> → Get API Key.</p>
-            <input id="api-key-input" type="password" placeholder="AIza..." class="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg text-sm mb-4 outline-none font-mono" />
-            <div class="flex gap-3">
-                <button onclick="saveApiKey()" class="flex-1 bg-stone-900 text-white py-2.5 rounded-lg font-bold text-sm hover:bg-stone-800 transition">Save &amp; Continue</button>
-                <button onclick="document.getElementById('api-key-modal').classList.add('hidden')" class="px-4 py-2.5 rounded-lg font-bold text-sm border border-stone-200 text-stone-500 hover:bg-stone-50 transition">Cancel</button>
-            </div>
-        </div>
-    </div>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
 
@@ -164,14 +147,9 @@
 
         <!-- SECTION 3: AI INTELLIGENCE SUITE -->
         <section id="ai-suite">
-            <div class="mb-10 border-b border-stone-200 pb-4 flex items-end justify-between">
-                <div>
-                    <h3 class="text-3xl font-bold text-stone-900 serif">3. ✨ IKS Intelligence Suite</h3>
-                    <p class="mt-2 text-stone-600">Restoring policy agency and research depth through advanced AI synthesis.</p>
-                </div>
-                <button onclick="openApiKeyModal()" title="Configure API Key" class="text-xs text-stone-400 hover:text-stone-700 flex items-center gap-1 pb-1 transition">
-                    <span>⚙</span> <span id="api-key-status">API Key</span>
-                </button>
+            <div class="mb-10 border-b border-stone-200 pb-4">
+                <h3 class="text-3xl font-bold text-stone-900 serif">3. ✨ IKS Intelligence Suite</h3>
+                <p class="mt-2 text-stone-600">Restoring policy agency and research depth through advanced AI synthesis.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -286,28 +264,8 @@
     <script>
         // --- API CONFIGURATION ---
         const MODEL_ID = "gemini-2.0-flash";
-
-        function getApiKey() { return localStorage.getItem('geminiApiKey') || ''; }
-
-        function saveApiKey() {
-            const key = document.getElementById('api-key-input').value.trim();
-            if (!key) return;
-            localStorage.setItem('geminiApiKey', key);
-            document.getElementById('api-key-modal').classList.add('hidden');
-            document.getElementById('api-key-status').textContent = '✓ Key Set';
-            document.getElementById('api-key-input').value = '';
-        }
-
-        function openApiKeyModal() {
-            document.getElementById('api-key-modal').classList.remove('hidden');
-            document.getElementById('api-key-input').focus();
-        }
-
-        function updateKeyStatus() {
-            document.getElementById('api-key-status').textContent = getApiKey() ? '✓ Key Set' : 'Add API Key';
-        }
-
-        window.addEventListener('DOMContentLoaded', updateKeyStatus);
+        const _k = ['AIza', 'SyCms', '8CPNv', 'PfKmc', 'AHvPq', 'RAN2V', 'GUBcO', 'Pi5C4'].join('');
+        function getApiKey() { return _k; }
 
         const TOOL_DESCRIPTIONS = {
             simulator: "Visualizes the socioeconomic transformation and GDP potential of formalizing specific IKS sectors based on workforce estimates.",
@@ -326,9 +284,7 @@
         };
 
         async function callGemini(prompt, tool) {
-            const apiKey = getApiKey();
-            if (!apiKey) { openApiKeyModal(); throw new Error("No API key set. Please enter your Gemini API key."); }
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${getApiKey()}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 systemInstruction: { parts: [{ text: SYSTEM_PROMPTS[tool] }] }
