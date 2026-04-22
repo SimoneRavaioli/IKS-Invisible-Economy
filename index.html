@@ -13,7 +13,6 @@
         .chart-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto; height: 450px; }
         .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
         
-        /* AI Result Components */
         .ai-brief-card {
             border-left: 4px solid #d97706;
             background: #ffffff;
@@ -68,7 +67,6 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f5f5f4; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 10px; }
     </style>
-    <!-- Chosen Palette: Earthen Wisdom -->
 </head>
 <body class="bg-stone-50 text-stone-800 antialiased selection:bg-amber-100">
 
@@ -151,7 +149,7 @@
         <section id="ai-suite">
             <div class="mb-10 border-b border-stone-200 pb-4">
                 <h3 class="text-3xl font-bold text-stone-900 serif">3. ✨ IKS Intelligence Suite</h3>
-                <p class="mt-2 text-stone-600">Restoring policy agency through research and advanced AI synthesis.</p>
+                <p class="mt-2 text-stone-600">Restoring policy agency and research depth through advanced AI synthesis.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -159,6 +157,7 @@
                 <!-- Input Panel -->
                 <div class="lg:col-span-5 space-y-4">
                     
+                    <!-- Tool Select -->
                     <div class="bg-white p-6 rounded-xl border border-stone-200 card-shadow">
                         <h4 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4">Choose Research Tool</h4>
                         <div class="grid grid-cols-1 gap-2">
@@ -183,17 +182,30 @@
                                 <div class="text-xs font-bold">✨ Education Designer</div>
                             </button>
                         </div>
+
+                        <!-- TOOL GUIDE (User Friendly Description) -->
+                        <div class="mt-6 pt-4 border-t border-stone-100">
+                            <h5 class="text-[10px] font-bold text-amber-600 uppercase mb-2">Tool Guide</h5>
+                            <p id="tool-description-text" class="text-xs text-stone-500 leading-relaxed italic">
+                                Visualizes the socioeconomic transformation and GDP potential of formalizing specific IKS sectors based on workforce estimates.
+                            </p>
+                        </div>
                     </div>
 
+                    <!-- Context Inputs -->
                     <div class="bg-white p-6 rounded-xl border border-stone-200 card-shadow">
+                        <!-- Simulator Input (Expanded) -->
                         <div id="input-simulator" class="tool-input-group">
-                            <label class="block text-xs font-bold text-stone-400 uppercase mb-2">Select Domain</label>
+                            <label class="block text-xs font-bold text-stone-400 uppercase mb-2">Select Research Domain</label>
                             <select id="sim-sector" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg text-sm mb-4 outline-none font-medium">
-                                <option value="Traditional Health Practitioners">Traditional Health</option>
-                                <option value="Indigenous Tech Innovators">Indigenous Tech</option>
-                                <option value="Food Keepers & Seeds">Food Keepers</option>
-                                <option value="Animal Husbandry Experts">Animal Husbandry</option>
-                                <option value="Environmental Stewards">Environmental Stewards</option>
+                                <option value="Knowledge Acquisition & Transfer Mentors">Knowledge Transfer & Mentors (~3M)</option>
+                                <option value="Visual & Performance Artists">Visual & Performing Arts (~2.5M)</option>
+                                <option value="Traditional Health Practitioners (THPs)">Traditional Health (THPs) (~1.5M)</option>
+                                <option value="Animal Knowledge & Husbandry Experts">Animal Knowledge/Husbandry (~1M)</option>
+                                <option value="Food Keepers & Seed Custodians">Food Keepers (~800k)</option>
+                                <option value="Environmental Management Stewards">Environmental Management (~500k)</option>
+                                <option value="Indigenous Technology & Metallurgy">Indigenous Technology (~400k)</option>
+                                <option value="Indigenous Astronomers & Navigators">Astronomers (~100k)</option>
                             </select>
                             <button onclick="runAI('simulator')" id="btn-run-simulator" class="w-full bg-stone-900 text-white py-3 rounded-lg font-bold text-sm hover:bg-stone-800 transition">Run Simulation</button>
                         </div>
@@ -253,6 +265,14 @@
         // --- API KEY ---
         const apiKey = "AIzaSyBMT3CmSeZ-n1KejzCb46nKU3RFPCOtA3w"; 
 
+        const TOOL_DESCRIPTIONS = {
+            simulator: "Visualizes the socioeconomic transformation and GDP potential of formalizing specific IKS sectors based on workforce estimates.",
+            drafter: "Generates 'Sui Generis' legal frameworks that allow IKS and Western systems to coexist as equals without colonization.",
+            synergy: "Identifies specific indigenous methodologies to solve contemporary global crises like climate resilience or water management.",
+            scanner: "Analyzes commercial products to flag unauthorized use of traditional biological resources or cultural property.",
+            education: "Creates decolonized lesson plans bridging Western science concepts with their indigenous epistemological counterparts."
+        };
+
         const SYSTEM_PROMPTS = {
             simulator: `Socioeconomic Analyst mode. 3 headers: "Human Capital Unlocked", "Economic Integration Path", "Social Justice Transformation". 3 bullets per header. No markdown.`,
             drafter: `Legal Architect mode. 3 headers: "Regulatory Alignment", "Validation Protocol", "Benefit Sharing Mechanism". 3 points per header. No markdown.`,
@@ -268,7 +288,6 @@
                 systemInstruction: { parts: [{ text: SYSTEM_PROMPTS[tool] }] }
             };
             
-            // Exponential backoff logic
             let delay = 1000;
             for (let i = 0; i < 5; i++) {
                 try {
@@ -286,9 +305,16 @@
 
         function selectTool(tool) {
             ['simulator', 'drafter', 'synergy', 'scanner', 'education'].forEach(t => {
-                document.getElementById(`tool-btn-${t}`).className = t === tool ? "w-full text-left p-3 rounded-lg border-2 border-amber-600 bg-amber-50 text-amber-900 flex items-center gap-3 transition-all" : "w-full text-left p-3 rounded-lg border-2 border-stone-100 bg-stone-50 text-stone-500 flex items-center gap-3 transition-all";
-                document.getElementById(`input-${t}`).classList.toggle('hidden', t !== tool);
+                const btn = document.getElementById(`tool-btn-${t}`);
+                const input = document.getElementById(`input-${t}`);
+                const isSelected = (t === tool);
+                
+                btn.className = isSelected ? "w-full text-left p-3 rounded-lg border-2 border-amber-600 bg-amber-50 text-amber-900 flex items-center gap-3 transition-all" : "w-full text-left p-3 rounded-lg border-2 border-stone-100 bg-stone-50 text-stone-500 flex items-center gap-3 transition-all";
+                input.classList.toggle('hidden', !isSelected);
             });
+            
+            // Update Tool Description
+            document.getElementById('tool-description-text').textContent = TOOL_DESCRIPTIONS[tool];
         }
 
         async function runAI(tool) {
@@ -350,7 +376,6 @@
         const labels = ['Knowledge Transfer', 'Visual Arts', 'Traditional Health', 'Animal Husbandry', 'Food Keepers', 'Enviro. Management', 'IKS Technology', 'Astronomers'];
         const values = [3000000, 2500000, 1500000, 1000000, 800000, 450000, 400000, 100000];
         
-        // Label wrapping logic for Chart.js
         const wrapLabel = (l) => {
             if (l.length <= 16) return l;
             const words = l.split(' ');
