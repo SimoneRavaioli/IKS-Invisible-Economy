@@ -183,7 +183,7 @@
                             </button>
                         </div>
 
-                        <!-- TOOL GUIDE (User Friendly Description) -->
+                        <!-- TOOL GUIDE -->
                         <div class="mt-6 pt-4 border-t border-stone-100">
                             <h5 class="text-[10px] font-bold text-amber-600 uppercase mb-2">Tool Guide</h5>
                             <p id="tool-description-text" class="text-xs text-stone-500 leading-relaxed italic">
@@ -194,9 +194,9 @@
 
                     <!-- Context Inputs -->
                     <div class="bg-white p-6 rounded-xl border border-stone-200 card-shadow">
-                        <!-- Simulator Input (Expanded) -->
+                        <!-- Simulator Input -->
                         <div id="input-simulator" class="tool-input-group">
-                            <label class="block text-xs font-bold text-stone-400 uppercase mb-2">Select Research Domain</label>
+                            <label class="block text-xs font-bold text-stone-400 uppercase mb-2">Select Domain</label>
                             <select id="sim-sector" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg text-sm mb-4 outline-none font-medium">
                                 <option value="Knowledge Acquisition & Transfer Mentors">Knowledge Transfer & Mentors (~3M)</option>
                                 <option value="Visual & Performance Artists">Visual & Performing Arts (~2.5M)</option>
@@ -257,7 +257,7 @@
         <!-- FOOTER -->
         <footer class="border-t border-stone-300 pt-8 pb-12 text-center text-stone-500 text-xs">
             <p><strong>Methodology:</strong> Based on South African DSI Frameworks & Zulu (2023) research.</p>
-            <p class="mt-1">Published by simoneravaioli | Powered by Gemini 2.5 Flash</p>
+            <p class="mt-1">Published by simoneravaioli | Powered by Gemini 1.5 Flash</p>
         </footer>
     </div>
 
@@ -282,7 +282,8 @@
         };
 
         async function callGemini(prompt, tool) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // Using gemini-1.5-flash for public API key support
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 systemInstruction: { parts: [{ text: SYSTEM_PROMPTS[tool] }] }
@@ -305,15 +306,9 @@
 
         function selectTool(tool) {
             ['simulator', 'drafter', 'synergy', 'scanner', 'education'].forEach(t => {
-                const btn = document.getElementById(`tool-btn-${t}`);
-                const input = document.getElementById(`input-${t}`);
-                const isSelected = (t === tool);
-                
-                btn.className = isSelected ? "w-full text-left p-3 rounded-lg border-2 border-amber-600 bg-amber-50 text-amber-900 flex items-center gap-3 transition-all" : "w-full text-left p-3 rounded-lg border-2 border-stone-100 bg-stone-50 text-stone-500 flex items-center gap-3 transition-all";
-                input.classList.toggle('hidden', !isSelected);
+                document.getElementById(`tool-btn-${t}`).className = t === tool ? "w-full text-left p-3 rounded-lg border-2 border-amber-600 bg-amber-50 text-amber-900 flex items-center gap-3 transition-all" : "w-full text-left p-3 rounded-lg border-2 border-stone-100 bg-stone-50 text-stone-500 flex items-center gap-3 transition-all";
+                document.getElementById(`input-${t}`).classList.toggle('hidden', t !== tool);
             });
-            
-            // Update Tool Description
             document.getElementById('tool-description-text').textContent = TOOL_DESCRIPTIONS[tool];
         }
 
