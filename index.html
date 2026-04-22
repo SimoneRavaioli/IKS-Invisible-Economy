@@ -66,9 +66,26 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f5f5f4; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 10px; }
+
+        #api-key-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        #api-key-modal.hidden { display: none; }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 antialiased selection:bg-amber-100">
+
+    <!-- API Key Modal -->
+    <div id="api-key-modal" class="hidden">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
+            <h3 class="text-lg font-bold text-stone-900 serif mb-2">Enter your Gemini API Key</h3>
+            <p class="text-stone-500 text-sm mb-1">Your key is stored only in your browser and never sent anywhere except Google’s API.</p>
+            <p class="text-stone-400 text-xs mb-4">Get a free key at <span class="font-mono text-amber-700">aistudio.google.com</span> → Get API Key.</p>
+            <input id="api-key-input" type="password" placeholder="AIza..." class="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg text-sm mb-4 outline-none font-mono" />
+            <div class="flex gap-3">
+                <button onclick="saveApiKey()" class="flex-1 bg-stone-900 text-white py-2.5 rounded-lg font-bold text-sm hover:bg-stone-800 transition">Save &amp; Continue</button>
+                <button onclick="document.getElementById('api-key-modal').classList.add('hidden')" class="px-4 py-2.5 rounded-lg font-bold text-sm border border-stone-200 text-stone-500 hover:bg-stone-50 transition">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
 
@@ -77,7 +94,7 @@
             <div class="inline-block px-3 py-1 bg-stone-200 text-stone-600 rounded-full text-xs font-bold tracking-widest uppercase">National Research Briefing</div>
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-stone-900 serif leading-tight">The Invisible Economy</h1>
             <h2 class="text-xl md:text-2xl text-stone-600 font-light max-w-4xl mx-auto">
-                Estimating the Economic & Social Costs of IKS Non-Recognition in South Africa
+                Estimating the Economic &amp; Social Costs of IKS Non-Recognition in South Africa
             </h2>
             <div class="mt-8 p-6 bg-white border-l-4 border-amber-600 rounded-r-lg shadow-sm max-w-2xl mx-auto text-left flex items-center gap-6">
                 <div>
@@ -131,7 +148,7 @@
             </div>
             <div class="bg-white p-8 rounded-b-xl card-shadow border border-stone-200 min-h-[220px]">
                 <div id="content-economic" class="block">
-                    <h4 class="text-xl font-bold text-amber-700 serif mb-3">Misappropriation & Biopiracy</h4>
+                    <h4 class="text-xl font-bold text-amber-700 serif mb-3">Misappropriation &amp; Biopiracy</h4>
                     <p class="text-stone-700 leading-relaxed max-w-3xl">Corporate capitalization on resources like traditional seeds and medicinal plants without fair compensation. Treating IKS as "public domain" results in billions of Rands in uncaptured IP value.</p>
                 </div>
                 <div id="content-cognitive" class="hidden">
@@ -147,9 +164,14 @@
 
         <!-- SECTION 3: AI INTELLIGENCE SUITE -->
         <section id="ai-suite">
-            <div class="mb-10 border-b border-stone-200 pb-4">
-                <h3 class="text-3xl font-bold text-stone-900 serif">3. ✨ IKS Intelligence Suite</h3>
-                <p class="mt-2 text-stone-600">Restoring policy agency and research depth through advanced AI synthesis.</p>
+            <div class="mb-10 border-b border-stone-200 pb-4 flex items-end justify-between">
+                <div>
+                    <h3 class="text-3xl font-bold text-stone-900 serif">3. ✨ IKS Intelligence Suite</h3>
+                    <p class="mt-2 text-stone-600">Restoring policy agency and research depth through advanced AI synthesis.</p>
+                </div>
+                <button onclick="openApiKeyModal()" title="Configure API Key" class="text-xs text-stone-400 hover:text-stone-700 flex items-center gap-1 pb-1 transition">
+                    <span>⚙</span> <span id="api-key-status">API Key</span>
+                </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -198,14 +220,14 @@
                         <div id="input-simulator" class="tool-input-group">
                             <label class="block text-xs font-bold text-stone-400 uppercase mb-2">Select Domain</label>
                             <select id="sim-sector" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg text-sm mb-4 outline-none font-medium">
-                                <option value="Knowledge Acquisition & Transfer Mentors">Knowledge Transfer & Mentors (~3M)</option>
-                                <option value="Visual & Performance Artists">Visual & Performing Arts (~2.5M)</option>
+                                <option value="Knowledge Acquisition &amp; Transfer Mentors">Knowledge Transfer &amp; Mentors (~3M)</option>
+                                <option value="Visual &amp; Performance Artists">Visual &amp; Performing Arts (~2.5M)</option>
                                 <option value="Traditional Health Practitioners (THPs)">Traditional Health (THPs) (~1.5M)</option>
-                                <option value="Animal Knowledge & Husbandry Experts">Animal Knowledge/Husbandry (~1M)</option>
-                                <option value="Food Keepers & Seed Custodians">Food Keepers (~800k)</option>
+                                <option value="Animal Knowledge &amp; Husbandry Experts">Animal Knowledge/Husbandry (~1M)</option>
+                                <option value="Food Keepers &amp; Seed Custodians">Food Keepers (~800k)</option>
                                 <option value="Environmental Management Stewards">Environmental Management (~500k)</option>
-                                <option value="Indigenous Technology & Metallurgy">Indigenous Technology (~400k)</option>
-                                <option value="Indigenous Astronomers & Navigators">Astronomers (~100k)</option>
+                                <option value="Indigenous Technology &amp; Metallurgy">Indigenous Technology (~400k)</option>
+                                <option value="Indigenous Astronomers &amp; Navigators">Astronomers (~100k)</option>
                             </select>
                             <button onclick="runAI('simulator')" id="btn-run-simulator" class="w-full bg-stone-900 text-white py-3 rounded-lg font-bold text-sm hover:bg-stone-800 transition">Run Simulation</button>
                         </div>
@@ -256,16 +278,36 @@
 
         <!-- FOOTER -->
         <footer class="border-t border-stone-300 pt-8 pb-12 text-center text-stone-500 text-xs">
-            <p><strong>Methodology:</strong> Based on South African DSI Frameworks & Zulu (2023) research.</p>
-            <p class="mt-1">Published by simoneravaioli | Powered by Gemini 1.5 Flash</p>
+            <p><strong>Methodology:</strong> Based on South African DSI Frameworks &amp; Zulu (2023) research.</p>
+            <p class="mt-1">Published by simoneravaioli | Powered by Gemini 2.0 Flash</p>
         </footer>
     </div>
 
     <script>
         // --- API CONFIGURATION ---
-        const apiKey = "AIzaSyDFjEUQv8ECEpAk_mbowVqKfSp9cNm_fh0"; 
-        // CORRECTED MODEL ID: Using gemini-1.5-flash for public keys
         const MODEL_ID = "gemini-2.0-flash";
+
+        function getApiKey() { return localStorage.getItem('geminiApiKey') || ''; }
+
+        function saveApiKey() {
+            const key = document.getElementById('api-key-input').value.trim();
+            if (!key) return;
+            localStorage.setItem('geminiApiKey', key);
+            document.getElementById('api-key-modal').classList.add('hidden');
+            document.getElementById('api-key-status').textContent = '✓ Key Set';
+            document.getElementById('api-key-input').value = '';
+        }
+
+        function openApiKeyModal() {
+            document.getElementById('api-key-modal').classList.remove('hidden');
+            document.getElementById('api-key-input').focus();
+        }
+
+        function updateKeyStatus() {
+            document.getElementById('api-key-status').textContent = getApiKey() ? '✓ Key Set' : 'Add API Key';
+        }
+
+        window.addEventListener('DOMContentLoaded', updateKeyStatus);
 
         const TOOL_DESCRIPTIONS = {
             simulator: "Visualizes the socioeconomic transformation and GDP potential of formalizing specific IKS sectors based on workforce estimates.",
@@ -284,6 +326,8 @@
         };
 
         async function callGemini(prompt, tool) {
+            const apiKey = getApiKey();
+            if (!apiKey) { openApiKeyModal(); throw new Error("No API key set. Please enter your Gemini API key."); }
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
@@ -355,7 +399,6 @@
                 renderOutput(response);
             } catch (err) {
                 placeholder.classList.remove('hidden');
-                // DISPLAYING THE ACTUAL ERROR MESSAGE FOR DEBUGGING
                 placeholder.innerHTML = `
                     <div class="px-6">
                         <p class="text-red-600 font-bold text-lg mb-2">Technical Error</p>
